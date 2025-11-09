@@ -1,0 +1,24 @@
+name: ChestScanner
+main: com.puk3p.chestscanner.ChestScanner
+version: 1.0
+api-version: 1.8
+author: Puk3p
+commands:
+  scan:
+    description: Scanează chunk-uri din jur pentru chesturi cu iteme
+    usage: |
+      /scan start [count] [load]
+      /scan owner <index>
+      /scan find <MATERIAL> [count] [load]
+      /scan list [page]
+      /scan who <index> [lines]
+      /scan tp <index>
+      /scan export <csv|yml>
+      /scan stop
+    permission: chestscanner.scan
+
+permissions:
+  chestscanner.scan: { default: op }
+  chestscanner.load: { default: op }
+  chestscanner.tp:   { default: op }
+  chestscanner.export: { default: op }
