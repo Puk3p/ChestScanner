@@ -3,7 +3,6 @@ package com.puk3p.chestscanner.listeners;
 import com.puk3p.chestscanner.storage.OwnerStore;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

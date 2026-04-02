@@ -1,11 +1,13 @@
 package com.puk3p.chestscanner.utils;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.util.List;
 
 public class ExportUtils {
 
@@ -26,14 +28,21 @@ public class ExportUtils {
         return out;
     }
 
-    public static File exportCsv(File folder, String name, List<Location> list) throws Exception {
+    public static File exportCsv(File folder, String name, List<Location> list) throws IOException {
         File out = new File(folder, name + ".csv");
-        try (FileWriter fw = new FileWriter(out)) {
+        try (OutputStreamWriter fw =
+                new OutputStreamWriter(new FileOutputStream(out), StandardCharsets.UTF_8)) {
             fw.write("world,x,y,z,chunkX,chunkZ\n");
             for (Location l : list) {
-                fw.write(String.format("%s,%d,%d,%d,%d,%d%n",
-                        l.getWorld().getName(), l.getBlockX(), l.getBlockY(), l.getBlockZ(),
-                        l.getChunk().getX(), l.getChunk().getZ()));
+                fw.write(
+                        String.format(
+                                "%s,%d,%d,%d,%d,%d%n",
+                                l.getWorld().getName(),
+                                l.getBlockX(),
+                                l.getBlockY(),
+                                l.getBlockZ(),
+                                l.getChunk().getX(),
+                                l.getChunk().getZ()));
             }
         }
         return out;

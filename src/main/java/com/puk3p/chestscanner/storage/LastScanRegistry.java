@@ -1,8 +1,7 @@
 package com.puk3p.chestscanner.storage;
 
-import org.bukkit.Location;
-
 import java.util.*;
+import org.bukkit.Location;
 
 public class LastScanRegistry {
     private final Map<UUID, List<Location>> results = new HashMap<>();

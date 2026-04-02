@@ -1,14 +1,12 @@
 package com.puk3p.chestscanner.utils;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class InvSnapshot {
-    // key simplu: MATERIAL:data (în 1.8 "data" = durability/variantă)
     private static String key(ItemStack it) {
         short data = it.getDurability();
         return it.getType().name() + ":" + data;
@@ -32,7 +30,6 @@ public class InvSnapshot {
         Map<String, Integer> add = new HashMap<>();
         Map<String, Integer> rem = new HashMap<>();
 
-        // chei unite
         Map<String, Integer> all = new HashMap<>(before);
         for (Map.Entry<String, Integer> e : after.entrySet()) {
             if (!all.containsKey(e.getKey())) all.put(e.getKey(), e.getValue());
@@ -50,8 +47,19 @@ public class InvSnapshot {
 
     public static class Diff {
         public final Map<String, Integer> added, removed;
-        public Diff(Map<String, Integer> ad, Map<String, Integer> rm) { this.added = ad; this.removed = rm; }
-        public boolean isEmpty() { return added.isEmpty() && removed.isEmpty(); }
-        @Override public String toString() { return "added=" + added + ", removed=" + removed; }
+
+        public Diff(Map<String, Integer> ad, Map<String, Integer> rm) {
+            this.added = ad;
+            this.removed = rm;
+        }
+
+        public boolean isEmpty() {
+            return added.isEmpty() && removed.isEmpty();
+        }
+
+        @Override
+        public String toString() {
+            return "added=" + added + ", removed=" + removed;
+        }
     }
 }

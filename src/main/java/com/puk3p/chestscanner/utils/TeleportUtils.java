@@ -14,8 +14,8 @@ public class TeleportUtils {
         int bz = around.getBlockZ();
 
         int[][] offsets = {
-                {0,0},{1,0},{-1,0},{0,1},{0,-1},{1,1},{1,-1},{-1,1},{-1,-1},
-                {2,0},{-2,0},{0,2},{0,-2}
+            {0, 0}, {1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}, {2, 0},
+            {-2, 0}, {0, 2}, {0, -2}
         };
 
         for (int dy = 0; dy <= 3; dy++) {
@@ -33,7 +33,6 @@ public class TeleportUtils {
                 }
             }
         }
-        // fallback: deasupra locației
         return around.clone().add(0.5, 1, 0.5);
     }
 

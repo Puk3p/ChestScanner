@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!-- Bukkit plugin pattern: storing/returning plugin references is standard -->
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+    </Match>
+    <!-- mkdirs() return value is safe to ignore when followed by existence check or write -->
+    <Match>
+        <Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE"/>
+        <Method name="~(onEnable|onCommand|&lt;init&gt;)"/>
+    </Match>
+</FindBugsFilter>

@@ -1,12 +1,11 @@
 package com.puk3p.chestscanner.utils;
 
+import java.util.*;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
-
-import java.util.*;
 
 public class LogPretty {
 
@@ -15,12 +14,10 @@ public class LogPretty {
         for (String line : rawLines) {
             Entry e = parse(line);
             if (e == null) {
-                // fallback: arată brut dacă nu poate fi parsată linia
                 p.sendMessage(ChatColor.GRAY + " - " + line);
                 continue;
             }
 
-            // cap de entry: [ora] Nume
             TextComponent bullet = tc("• ", ChatColor.DARK_AQUA, false);
             TextComponent ts = tc("[" + e.time + "] ", ChatColor.GRAY, false);
             TextComponent actor = tc(e.actor, ChatColor.GOLD, true);
@@ -41,20 +38,20 @@ public class LogPretty {
         footer(p);
     }
 
-    private static void sendItemsList(Player p, Map<String,Integer> items, ChatColor accent) {
-        // păstrează ordinea din fișier (LinkedHashMap la parse)
-        for (Map.Entry<String,Integer> it : items.entrySet()) {
-            String key = it.getKey();          // ex: TRIPWIRE_HOOK:0
-            int amount = it.getValue();        // ex: 8
-            String niceName = prettify(key);   // ex: Tripwire Hook (data 0)
+    private static void sendItemsList(Player p, Map<String, Integer> items, ChatColor accent) {
+        for (Map.Entry<String, Integer> it : items.entrySet()) {
+            String key = it.getKey();
+            int amount = it.getValue();
+            String niceName = prettify(key);
 
             TextComponent dot = tc("     • ", ChatColor.DARK_GRAY, false);
             TextComponent amt = tc(amount + "x ", accent, true);
             TextComponent name = tc(niceName, ChatColor.WHITE, false);
 
-            // hover: arată cheia exactă din log (MATERIAL:data)
-            name.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                    new BaseComponent[]{tc(key, ChatColor.GRAY, false)}));
+            name.setHoverEvent(
+                    new HoverEvent(
+                            HoverEvent.Action.SHOW_TEXT,
+                            new BaseComponent[] {tc(key, ChatColor.GRAY, false)}));
 
             p.spigot().sendMessage(dot, amt, name);
         }
@@ -73,7 +70,7 @@ public class LogPretty {
             int arrow = line.indexOf("->", afterTs);
             if (arrow < 0) return null;
             String actor = line.substring(afterTs, arrow).trim();
-            if (actor.startsWith(":")) actor = actor.substring(1).trim(); // în caz de spații
+            if (actor.startsWith(":")) actor = actor.substring(1).trim();
 
             int plusOpen = line.indexOf('{', arrow);
             int plusClose = line.indexOf('}', plusOpen);
@@ -81,8 +78,14 @@ public class LogPretty {
             int minusOpen = line.indexOf('{', bar);
             int minusClose = line.lastIndexOf('}');
 
-            String plusItems = (plusOpen > 0 && plusClose > plusOpen) ? line.substring(plusOpen + 1, plusClose) : "";
-            String minusItems = (minusOpen > 0 && minusClose > minusOpen) ? line.substring(minusOpen + 1, minusClose) : "";
+            String plusItems =
+                    (plusOpen > 0 && plusClose > plusOpen)
+                            ? line.substring(plusOpen + 1, plusClose)
+                            : "";
+            String minusItems =
+                    (minusOpen > 0 && minusClose > minusOpen)
+                            ? line.substring(minusOpen + 1, minusClose)
+                            : "";
 
             Entry e = new Entry();
             e.time = time;
@@ -95,13 +98,12 @@ public class LogPretty {
         }
     }
 
-    private static Map<String,Integer> parseItems(String s) {
-        Map<String,Integer> map = new LinkedHashMap<>();
+    private static Map<String, Integer> parseItems(String s) {
+        Map<String, Integer> map = new LinkedHashMap<>();
         if (s == null) return map;
         s = s.trim();
         if (s.isEmpty() || s.equals("()")) return map;
 
-        // format: NAME:DATA=AMOUNT, NAME2:DATA=AMOUNT2
         String[] parts = s.split(",");
         for (String part : parts) {
             String t = part.trim();
@@ -113,7 +115,8 @@ public class LogPretty {
             try {
                 int amount = Integer.parseInt(val);
                 if (amount > 0) map.put(key, amount);
-            } catch (NumberFormatException ignored) { }
+            } catch (NumberFormatException ignored) {
+            }
         }
         return map;
     }
@@ -139,7 +142,6 @@ public class LogPretty {
     }
 
     private static String prettify(String key) {
-        // key format: MATERIAL:data
         String mat = key;
         String data = "0";
         int colon = key.indexOf(':');
@@ -156,8 +158,12 @@ public class LogPretty {
         StringBuilder out = new StringBuilder(s.length());
         boolean up = true;
         for (char ch : s.toCharArray()) {
-            if (up && ch >= 'a' && ch <= 'z') { out.append((char)(ch - 32)); up = false; }
-            else { out.append(ch); }
+            if (up && ch >= 'a' && ch <= 'z') {
+                out.append((char) (ch - 32));
+                up = false;
+            } else {
+                out.append(ch);
+            }
             if (ch == ' ') up = true;
         }
         return out.toString();
@@ -165,6 +171,6 @@ public class LogPretty {
 
     private static class Entry {
         String time, actor;
-        Map<String,Integer> added, removed;
+        Map<String, Integer> added, removed;
     }
 }

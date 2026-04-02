@@ -1,11 +1,10 @@
 package com.puk3p.chestscanner.storage;
 
-import org.bukkit.Location;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 import java.io.File;
 import java.util.UUID;
+import org.bukkit.Location;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class OwnerStore {
     private final File file;
@@ -17,7 +16,13 @@ public class OwnerStore {
     }
 
     private String key(Location l) {
-        return l.getWorld().getName()+":"+l.getBlockX()+","+l.getBlockY()+","+l.getBlockZ();
+        return l.getWorld().getName()
+                + ":"
+                + l.getBlockX()
+                + ","
+                + l.getBlockY()
+                + ","
+                + l.getBlockZ();
     }
 
     public void setOwner(Location loc, UUID owner) {
@@ -36,6 +41,9 @@ public class OwnerStore {
     }
 
     private void save() {
-        try { yml.save(file); } catch (Exception ignored) {}
+        try {
+            yml.save(file);
+        } catch (Exception ignored) {
+        }
     }
 }

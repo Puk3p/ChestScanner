@@ -1,11 +1,10 @@
 package com.puk3p.chestscanner.utils;
 
+import java.lang.reflect.Method;
 import org.bukkit.Location;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-
-import java.lang.reflect.Method;
 
 public class InvHolderUtils {
 
@@ -15,7 +14,6 @@ public class InvHolderUtils {
             return ((Chest) h).getLocation();
         }
 
-        // Detectează DoubleChest fără import
         if (h != null && "org.bukkit.inventory.DoubleChest".equals(h.getClass().getName())) {
             try {
                 Method getLeft = h.getClass().getMethod("getLeftSide");
@@ -29,7 +27,7 @@ public class InvHolderUtils {
                 if (a != null && b != null) return canonical(a, b);
                 if (a != null) return a;
                 if (b != null) return b;
-            } catch (Exception ignored) {
+            } catch (ReflectiveOperationException ignored) {
             }
         }
         return null;

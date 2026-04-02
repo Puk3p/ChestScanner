@@ -1,8 +1,11 @@
 package com.puk3p.chestscanner.listeners;
 
+import com.puk3p.chestscanner.storage.LogStore;
 import com.puk3p.chestscanner.utils.InvHolderUtils;
 import com.puk3p.chestscanner.utils.InvSnapshot;
-import com.puk3p.chestscanner.storage.LogStore;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
@@ -11,10 +14,6 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 public class ChestLogListener implements Listener {
     private final Map<UUID, Session> open = new HashMap<>();
@@ -53,6 +52,10 @@ public class ChestLogListener implements Listener {
     private static class Session {
         final Location loc;
         final Map<String, Integer> before;
-        Session(Location l, Map<String, Integer> b) { this.loc=l; this.before=b; }
+
+        Session(Location l, Map<String, Integer> b) {
+            this.loc = l;
+            this.before = b;
+        }
     }
 }

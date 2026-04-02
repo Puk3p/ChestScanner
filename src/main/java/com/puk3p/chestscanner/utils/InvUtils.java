@@ -4,7 +4,6 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-
 public class InvUtils {
     public static boolean hasItems(Inventory inv) {
         if (inv == null) return false;
