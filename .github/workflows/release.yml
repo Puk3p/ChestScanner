@@ -55,51 +55,37 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload to Discord Thread with Premium Embed
+      - name: "Step 5: Post Discord Embed"
         run: |
-          JAR_FILE=$(ls target/ChestScanner-*.jar | head -n 1)
-          JAR_NAME=$(basename "$JAR_FILE")
+          JAR_NAME=$(basename $(ls target/ChestScanner-*.jar | head -n 1))
+          WEBHOOK="${{ secrets.URL_WEBHOOK_OPERATOR }}?thread_id=1489307346642403541"
           
-          JSON_PAYLOAD=$(cat <<EOF
-          {
+          curl -X POST -H "Content-Type: application/json" -d '{
             "username": "Puk3p CI/CD",
-            "content": "<@&${{ secrets.OPERATOR_ROLE_ID }}> New build available! ⬇️",
+            "content": "<@&'"${{ secrets.OPERATOR_ROLE_ID }}"'> New build available! ⬇️",
             "embeds": [
               {
                 "title": "✨ ChestScanner — Fresh Build Available",
                 "description": "**Deployment completed successfully**\nA new plugin version has just been generated and uploaded automatically.",
                 "color": 10181046,
                 "fields": [
-                  {
-                    "name": "🔖 Version",
-                    "value": "\`${{ steps.version.outputs.VERSION }}\`",
-                    "inline": true
-                  },
-                  {
-                    "name": "📂 File",
-                    "value": "\`$JAR_NAME\`",
-                    "inline": true
-                  },
-                  {
-                    "name": "⚙️ Pipeline",
-                    "value": "\`GitHub Actions\`",
-                    "inline": true
-                  }
+                  {"name": "🔖 Version", "value": "`'"${{ steps.version.outputs.VERSION }}"'`", "inline": true},
+                  {"name": "📂 File", "value": "`'"$JAR_NAME"'`", "inline": true},
+                  {"name": "⚙️ Pipeline", "value": "`GitHub Actions`", "inline": true}
                 ],
-                "thumbnail": {
-                  "url": "https://cdn-icons-png.flaticon.com/512/226/226777.png"
-                },
-                "footer": {
-                  "text": "Puk3p Automated Build System"
-                },
-                "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+                "thumbnail": {"url": "https://cdn-icons-png.flaticon.com/512/226/226777.png"},
+                "footer": {"text": "Puk3p Automated Build System"},
+                "timestamp": "'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'"
               }
             ]
-          }
-          EOF
-          )
+          }' "$WEBHOOK"
+
+      - name: "Step 6: Upload JAR to Discord"
+        run: |
+          JAR_FILE=$(ls target/ChestScanner-*.jar | head -n 1)
+          WEBHOOK="${{ secrets.URL_WEBHOOK_OPERATOR }}?thread_id=1489307346642403541"
           
           curl -X POST \
                -F "file=@$JAR_FILE" \
-               -F "payload_json=$JSON_PAYLOAD" \
-               "${{ secrets.URL_WEBHOOK_OPERATOR }}?thread_id=1489307346642403541"
+               -F 'payload_json={"username":"Puk3p CI/CD"}' \
+               "$WEBHOOK"
