@@ -63,6 +63,7 @@ jobs:
           JSON_PAYLOAD=$(cat <<EOF
           {
             "username": "Puk3p CI/CD",
+            "content": "<@&${{ secrets.OPERATOR_ROLE_ID }}> New build available! ⬇️",
             "embeds": [
               {
                 "title": "✨ ChestScanner — Fresh Build Available",
@@ -101,4 +102,4 @@ jobs:
           curl -X POST \
                -F "file=@$JAR_FILE" \
                -F "payload_json=$JSON_PAYLOAD" \
-               "${{ secrets.URL_WEBHOOK_OPERATOR }}?thread_id=1489296880713076869"
+               "${{ secrets.URL_WEBHOOK_OPERATOR }}?thread_id=1489307346642403541"
