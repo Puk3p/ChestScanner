@@ -10,6 +10,8 @@ commands:
       /scan start [count] [load]
       /scan owner <index>
       /scan find <MATERIAL> [count] [load]
+      /scan allmap [load]
+      /scan findall <MATERIAL> [load]
       /scan list [page]
       /scan who <index> [lines]
       /scan tp <index>

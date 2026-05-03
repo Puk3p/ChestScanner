@@ -1,6 +1,7 @@
 package com.puk3p.chestscanner.commands;
 
 import com.puk3p.chestscanner.ChestScanner;
+import com.puk3p.chestscanner.tasks.FullMapScanTask;
 import com.puk3p.chestscanner.tasks.ScanTask;
 import com.puk3p.chestscanner.utils.ExportUtils;
 import com.puk3p.chestscanner.utils.TeleportUtils;
@@ -10,6 +11,7 @@ import java.util.UUID;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.WorldBorder;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -57,6 +59,27 @@ public class ScanCommand implements CommandExecutor {
             int count = (a.length >= 3) ? clampInt(a[2], 1, 5000, 100) : 100;
             boolean load = (a.length >= 4) && a[3].equalsIgnoreCase("load");
             startTask(p, count, load, m);
+            return true;
+        }
+
+        if (a[0].equalsIgnoreCase("allmap")) {
+            boolean load = (a.length >= 2) && a[1].equalsIgnoreCase("load");
+            startFullMapTask(p, load, null);
+            return true;
+        }
+
+        if (a[0].equalsIgnoreCase("findall")) {
+            if (a.length < 2) {
+                p.sendMessage("Uso: /scan findall <MATERIAL> [load]");
+                return true;
+            }
+            Material m = Material.matchMaterial(a[1]);
+            if (m == null) {
+                p.sendMessage("Material invalid: " + a[1]);
+                return true;
+            }
+            boolean load = (a.length >= 3) && a[2].equalsIgnoreCase("load");
+            startFullMapTask(p, load, m);
             return true;
         }
 
@@ -201,7 +224,7 @@ public class ScanCommand implements CommandExecutor {
 
         p.sendMessage(
                 ChatColor.YELLOW
-                        + "Uso: /scan start [count] [load] | find <MAT> [count] [load] | list | tp <i> | export <csv|yml> | stop");
+                        + "Uso: /scan start [count] [load] | find <MAT> [count] [load] | allmap [load] | findall <MAT> [load] | list | tp <i> | export <csv|yml> | stop");
         return true;
     }
 
@@ -209,6 +232,64 @@ public class ScanCommand implements CommandExecutor {
         UUID id = p.getUniqueId();
         BukkitTask t = new ScanTask(plugin, p, count, load, filter).runTaskTimer(plugin, 1L, 1L);
         plugin.registerTask(id, t);
+    }
+
+    private void startFullMapTask(Player p, boolean load, Material filter) {
+        WorldBorder wb = p.getWorld().getWorldBorder();
+        double half = wb.getSize() / 2.0d;
+        double cx = wb.getCenter().getX();
+        double cz = wb.getCenter().getZ();
+
+        int minBlockX = (int) Math.floor(cx - half);
+        int maxBlockX = (int) Math.floor(cx + half);
+        int minBlockZ = (int) Math.floor(cz - half);
+        int maxBlockZ = (int) Math.floor(cz + half);
+
+        int minChunkX = floorDiv16(minBlockX);
+        int maxChunkX = floorDiv16(maxBlockX);
+        int minChunkZ = floorDiv16(minBlockZ);
+        int maxChunkZ = floorDiv16(maxBlockZ);
+
+        p.sendMessage(
+                ChatColor.YELLOW
+                        + "[Scan] WorldBorder corners blocks: ("
+                        + minBlockX
+                        + ", "
+                        + minBlockZ
+                        + ") -> ("
+                        + maxBlockX
+                        + ", "
+                        + maxBlockZ
+                        + ")");
+        p.sendMessage(
+                ChatColor.YELLOW
+                        + "[Scan] Iterating chunks: X["
+                        + minChunkX
+                        + ".."
+                        + maxChunkX
+                        + "] Z["
+                        + minChunkZ
+                        + ".."
+                        + maxChunkZ
+                        + "]");
+
+        UUID id = p.getUniqueId();
+        BukkitTask t =
+                new FullMapScanTask(
+                                plugin,
+                                p,
+                                minChunkX,
+                                maxChunkX,
+                                minChunkZ,
+                                maxChunkZ,
+                                load,
+                                filter)
+                        .runTaskTimer(plugin, 1L, 1L);
+        plugin.registerTask(id, t);
+    }
+
+    private int floorDiv16(int value) {
+        return Math.floorDiv(value, 16);
     }
 
     private int clampInt(String s, int min, int max, int def) {

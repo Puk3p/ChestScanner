@@ -2,3 +2,5 @@ chunks-per-tick: 2
 progress-every: 20
 max-list-show: 30
 attempt-load-default: false
+full-map-min-block: -100000
+full-map-max-block: 100000
