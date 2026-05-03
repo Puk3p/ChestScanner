@@ -276,14 +276,7 @@ public class ScanCommand implements CommandExecutor {
         UUID id = p.getUniqueId();
         BukkitTask t =
                 new FullMapScanTask(
-                                plugin,
-                                p,
-                                minChunkX,
-                                maxChunkX,
-                                minChunkZ,
-                                maxChunkZ,
-                                load,
-                                filter)
+                                plugin, p, minChunkX, maxChunkX, minChunkZ, maxChunkZ, load, filter)
                         .runTaskTimer(plugin, 1L, 1L);
         plugin.registerTask(id, t);
     }

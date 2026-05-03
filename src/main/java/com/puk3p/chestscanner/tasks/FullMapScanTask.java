@@ -151,7 +151,11 @@ public class FullMapScanTask extends BukkitRunnable {
         if (!hasNext()) {
             long ms = System.currentTimeMillis() - startTime;
             player.sendMessage(
-                    ChatColor.GREEN + "[Scan] Full map gata in " + ms + " ms. Rezultate: " + found.size());
+                    ChatColor.GREEN
+                            + "[Scan] Full map gata in "
+                            + ms
+                            + " ms. Rezultate: "
+                            + found.size());
 
             plugin.getRegistry().set(playerId, found);
 
