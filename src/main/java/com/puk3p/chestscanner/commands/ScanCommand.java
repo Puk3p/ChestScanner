@@ -63,6 +63,21 @@ public class ScanCommand implements CommandExecutor {
         }
 
         if (a[0].equalsIgnoreCase("allmap")) {
+            if (a.length >= 2 && a[1].equalsIgnoreCase("filter")) {
+                if (a.length < 3) {
+                    p.sendMessage("Uso: /scan allmap filter <MATERIAL> [load]");
+                    return true;
+                }
+                Material m = Material.matchMaterial(a[2]);
+                if (m == null) {
+                    p.sendMessage("Material invalid: " + a[2]);
+                    return true;
+                }
+                boolean load = (a.length >= 4) && a[3].equalsIgnoreCase("load");
+                startFullMapTask(p, load, m);
+                return true;
+            }
+
             boolean load = (a.length >= 2) && a[1].equalsIgnoreCase("load");
             startFullMapTask(p, load, null);
             return true;
@@ -224,7 +239,7 @@ public class ScanCommand implements CommandExecutor {
 
         p.sendMessage(
                 ChatColor.YELLOW
-                        + "Uso: /scan start [count] [load] | find <MAT> [count] [load] | allmap [load] | findall <MAT> [load] | list | tp <i> | export <csv|yml> | stop");
+                        + "Uso: /scan start [count] [load] | find <MAT> [count] [load] | allmap [load] | allmap filter <MAT> [load] | findall <MAT> [load] | list | tp <i> | export <csv|yml> | stop");
         return true;
     }
 

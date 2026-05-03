@@ -11,6 +11,7 @@ commands:
       /scan owner <index>
       /scan find <MATERIAL> [count] [load]
       /scan allmap [load]
+      /scan allmap filter <MATERIAL> [load]
       /scan findall <MATERIAL> [load]
       /scan list [page]
       /scan who <index> [lines]
